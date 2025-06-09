@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
 
 typedef struct {
     size_t w;
@@ -64,22 +65,60 @@ Resolution* parseResAssert(char* str) {
     return res;
 }
 
+bool strisnum(char* str) {
+    size_t len = 0;
+
+    bool dot = false;
+
+    for(size_t i = 0; i < len; i++) {
+        char c = str[i];
+
+        if(c == '.') {
+            if(dot) {
+                return false;
+            }
+
+            dot = true;
+        }
+
+        if(!isdigit(c)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 int main(int argc, char* argv[]) {
-    if(argc != 2) {
+    if(argc == 1) {
         printf("Usage: <resolution> \n");
         exit(1);
     }
 
-    Resolution* resolution = parseResAssert(argv[1]);
+    Resolution* resA = parseResAssert(argv[1]);
+    // TODO: resolution comparing;
+    //Resolution* resB = parseResAssert(argv[2]);
 
-    for(float i = 0.25; i <= 2; i += 0.25) {
-        Resolution res = mulRes(resolution, i);
+    if(argc < 3) {
+        for(float i = 0.25; i <= 2; i += 0.25) {
+            Resolution res = mulRes(resA, i);
 
-        if(res.w <= 0 || res.h <= 0) {
-            continue;
+            if(res.w <= 0 || res.h <= 0) {
+                continue;
+            }
+
+            // TODO: Symmetrical alignment;
+            printf("%g %ix%i \n", i, res.w, res.h);
         }
 
+        return 0;
+    }
 
-        printf("%g %ix%i \n", i, res.w, res.h);
+    if(strisnum(argv[2])) {
+        float mul = atof(argv[2]);
+        Resolution res = mulRes(resA, mul);
+
+        printf("%ix%i \n", res);
+        return 0;
     }
 }
