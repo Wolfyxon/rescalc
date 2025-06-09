@@ -65,6 +65,10 @@ Resolution* parseResAssert(char* str) {
     return res;
 }
 
+void printRes(Resolution* resolution) {
+    printf("%ix%i\n", resolution->w, resolution->h);
+}
+
 bool strisnum(char* str) {
     size_t len = 0;
 
@@ -116,9 +120,10 @@ int main(int argc, char* argv[]) {
 
     if(strisnum(argv[2])) {
         float mul = atof(argv[2]);
+        
         Resolution res = mulRes(resA, mul);
-
-        printf("%ix%i \n", res);
+        printRes(&res);
+        
         return 0;
     }
 }
