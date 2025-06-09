@@ -143,13 +143,13 @@ int main(int argc, char* argv[]) {
 
     float modifier = atof(argv[3]);
 
-    if(!strcmp(argv[2], "*")) {
+    if(!strcmp(argv[2], "*") || !strcmp(argv[2], "mul")) {
         Resolution res = mulRes(resA, modifier);
         printRes(&res);
         
         return 0;
     }
-    else if(!strcmp(argv[2], "/")) {
+    else if(!strcmp(argv[2], "/") || !strcmp(argv[2], "div")) {
         Resolution res = divRes(resA, modifier);
         printRes(&res);
         
