@@ -54,6 +54,13 @@ Resolution mulRes(Resolution* resolution, float multiplier) {
     };
 }
 
+Resolution divRes(Resolution* resolution, float divisor) {
+    return (Resolution) {
+        .w = resolution->w / divisor,
+        .h = resolution->h / divisor
+    };
+}
+
 Resolution* parseResAssert(char* str) {
     Resolution* res = parseRes(str);
 
@@ -118,10 +125,32 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    if(strisnum(argv[2])) {
-        float mul = atof(argv[2]);
+    if(argc < 4) {
+        if(strisnum(argv[2])) {
+            float mul = atof(argv[2]);
+            
+            Resolution res = mulRes(resA, mul);
+            printRes(&res);
+            
+            return 0;
+        }
+    }
+
+    if(!strisnum(argv[3])) {
+        fprintf(stderr, "Usage: rescalc <w>x<h> <* | /> <multiplier / divisor>");
+        return 1;
+    }
+
+    float modifier = atof(argv[3]);
+
+    if(strcmp(argv[2], "*") == 0) {
+        Resolution res = mulRes(resA, modifier);
+        printRes(&res);
         
-        Resolution res = mulRes(resA, mul);
+        return 0;
+    }
+    else if(strcmp(argv[2], "/") == 0) {
+        Resolution res = divRes(resA, modifier);
         printRes(&res);
         
         return 0;
