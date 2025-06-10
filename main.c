@@ -57,7 +57,7 @@ Resolution* parseRes(char* str) {
                 return &res->res;
             }
 
-            token = strtok(NULL, " "); // how
+            token = strtok(NULL, " "); // NULL tells it to use the previous string. I don't like that 
         }
     }
     
