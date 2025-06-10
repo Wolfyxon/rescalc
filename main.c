@@ -9,10 +9,59 @@ typedef struct {
     size_t h;
 } Resolution;
 
+typedef struct {
+    char* names;
+    Resolution res;
+} NamedResolution;
+
+NamedResolution RESOLUTIONS[] = {
+    {
+        .names = "default fhd 16:9",
+        .res = {
+            .w = 1920,
+            .h = 1080
+        }
+    }
+};
+
+bool strcaseeq(char* a, char* b) {
+    size_t len = strlen(a);
+
+    if(strlen(b) != len) {
+        return false;
+    }
+
+    for(size_t i = 0; i < len; i++) {
+        if(a[i] != b[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 Resolution* parseRes(char* str) {
-    int len = strlen(str);
+    int str_len = strlen(str);
     
-    if(len < 3) {
+    for(size_t i = 0; i < sizeof(RESOLUTIONS) / sizeof(NamedResolution); i++) {
+        NamedResolution* res = &RESOLUTIONS[i];
+        size_t names_len = strlen(res->names);
+
+        char buf[names_len + 1];
+        strncpy(buf, res->names, names_len + 1);
+
+        char* token = strtok(buf, " ");
+
+        while(token != NULL) {
+            if(strcaseeq(token, str)) {
+                return &res->res;
+            }
+
+            token = strtok(NULL, " "); // how
+        }
+    }
+    
+    if(str_len < 3) {
         return NULL;
     }
 
@@ -21,15 +70,15 @@ Resolution* parseRes(char* str) {
 
     int start = 0;
 
-    for(int i = 0; i < len; i++) {
+    for(int i = 0; i < str_len; i++) {
         bool isSplit = str[i] == 'x';
 
         if(!isSplit && !isdigit(str[i])) {
             return NULL;
         }
 
-        if(isSplit || i == len - 1) {
-            int dimSize = (len + start) - i;
+        if(isSplit || i == str_len - 1) {
+            int dimSize = (str_len + start) - i;
             char buf[dimSize];
 
             strncpy(buf, str + start, dimSize);
