@@ -22,7 +22,13 @@ Resolution* parseRes(char* str) {
     int start = 0;
 
     for(int i = 0; i < len; i++) {
-        if(str[i] == 'x' || i == len - 1) {
+        bool isSplit = str[i] == 'x';
+
+        if(!isSplit && !isdigit(str[i])) {
+            return NULL;
+        }
+
+        if(isSplit || i == len - 1) {
             int dimSize = (len + start) - i;
             char buf[dimSize];
 
